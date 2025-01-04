@@ -1,11 +1,11 @@
-# My Electron App
+# media-to-mp3-downloader
 
 This project is a cross-platform desktop application built using Electron.js, React, TypeScript, and Tailwind CSS. It leverages shadcn/ui for UI components and integrates with yt-dlp for video downloading functionality.
 
 ## Project Structure
 
 ```
-my-electron-app
+media-to-mp3-downloader
 ├── src
 │   ├── main
 │   │   └── main.ts          # Entry point for the Electron main process
@@ -37,9 +37,10 @@ my-electron-app
 ### Installation
 
 1. Clone the repository:
+
    ```
-   git clone https://github.com/yourusername/my-electron-app.git
-   cd my-electron-app
+   git clone https://github.com/killmeridze/media-to-mp3-downloader.git
+   cd media-to-mp3-downloader
    ```
 
 2. Install dependencies:
@@ -50,6 +51,7 @@ my-electron-app
 ### Running the Application
 
 To start the application in development mode, run:
+
 ```
 npm start
 ```
@@ -57,6 +59,7 @@ npm start
 ### Building the Application
 
 To build the application for production, run:
+
 ```
 npm run build
 ```
@@ -64,6 +67,7 @@ npm run build
 ### Linting
 
 To lint the code, run:
+
 ```
 npm run lint
 ```
