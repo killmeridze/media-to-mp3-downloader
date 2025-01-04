@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the application
+        run: npm run build
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
+
+      - name: Package the application
+        run: npm run package
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-electron-app
+          path: path/to/your/build/output

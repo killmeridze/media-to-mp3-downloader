@@ -1,0 +1,37 @@
+{
+  "name": "my-electron-app",
+  "version": "1.0.0",
+  "description": "A cross-platform desktop application built with Electron, React, TypeScript, and Tailwind CSS.",
+  "main": "src/main/main.ts",
+  "scripts": {
+    "start": "electron .",
+    "build": "tsc && vite build",
+    "dev": "vite",
+    "lint": "eslint . --ext .ts,.tsx",
+    "test": "jest"
+  },
+  "keywords": [
+    "electron",
+    "react",
+    "typescript",
+    "tailwindcss"
+  ],
+  "author": "killmeridze",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "tailwindcss": "latest"
+  },
+  "devDependencies": {
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "typescript": "latest",
+    "vite": "latest",
+    "eslint": "latest",
+    "eslint-plugin-react": "latest",
+    "jest": "latest",
+    "ts-jest": "latest"
+  }
+}
