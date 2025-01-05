@@ -86,5 +86,4 @@ This project is licensed under the MIT License. See the LICENSE file for more de
 - [React](https://reactjs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
-- [shadcn/ui](https://ui.shadcn.com/)
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp)

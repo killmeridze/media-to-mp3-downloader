@@ -1,7 +1,17 @@
 import React from "react";
+import { useDownloadStatus } from "./hooks/useDownloadStatus";
+import { useUrlValidator } from "./hooks/useUrlValidator";
 
 const App: React.FC = () => {
   const [savePath, setSavePath] = React.useState<string>("");
+  const [url, setUrl] = React.useState<string>("");
+
+  const { isValidUrl } = useUrlValidator(url);
+  const { message, isDownloadReady } = useDownloadStatus({
+    url,
+    savePath,
+    isValidUrl,
+  });
 
   const handleDirectorySelect = async () => {
     const paths = await window.api.openDirectory();
@@ -32,10 +42,19 @@ const App: React.FC = () => {
             <div className="flex gap-2">
               <input
                 type="text"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
                 placeholder="Paste your URL here..."
                 className="flex-1 bg-black/20 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 px-6 py-2 rounded-lg font-medium transition-all duration-300">
+              <button
+                disabled={!isDownloadReady}
+                className={`${
+                  !isDownloadReady
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:from-purple-600 hover:to-pink-600"
+                } bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-lg font-medium transition-all duration-300`}
+              >
                 Download
               </button>
             </div>
@@ -64,9 +83,7 @@ const App: React.FC = () => {
 
         {/* Status Area */}
         <div className="bg-black/20 backdrop-blur-lg rounded-lg p-4 border border-white/10">
-          <p className="text-gray-200 text-center text-sm">
-            Ready to download. Paste a URL to begin.
-          </p>
+          <p className="text-gray-200 text-center text-sm">{message}</p>
         </div>
       </div>
     </div>
