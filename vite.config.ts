@@ -10,9 +10,6 @@ export default defineConfig({
         entry: "src/main/main.ts",
         vite: {
           build: {
-            rollupOptions: {
-              external: ["electron"],
-            },
             outDir: "dist/main",
           },
         },
@@ -29,5 +26,8 @@ export default defineConfig({
   ],
   build: {
     outDir: "dist/renderer",
+  },
+  css: {
+    postcss: "./postcss.config.js",
   },
 });
