@@ -1,31 +1,39 @@
-import { app, BrowserWindow } from 'electron';
-import path from 'path';
+const { app, BrowserWindow } = require("electron");
+const path = require("path");
+
+app.disableHardwareAcceleration();
 
 function createWindow() {
-    const mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
-        webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
-            contextIsolation: true,
-            enableRemoteModule: false,
-            nodeIntegration: false,
-        },
-    });
+  const mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, "../preload/index.js"),
+      sandbox: true,
+    },
+  });
 
-    mainWindow.loadURL('http://localhost:3000'); // Adjust this URL if needed
+  if (!app.isPackaged) {
+    mainWindow.loadURL("http://localhost:5173/");
+  } else {
+    mainWindow.loadFile(path.join(__dirname, "../renderer/index.html"));
+  }
 }
 
-app.on('ready', createWindow);
-
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+app.on("ready", () => {
+  createWindow();
 });
 
-app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow();
-    }
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
+
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
 });
