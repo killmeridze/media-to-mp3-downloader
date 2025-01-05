@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 
 app.disableHardwareAcceleration();
@@ -7,11 +7,11 @@ function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 540,
-    resizable: false,
+    // resizable: false,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, "../preload/index.js"),
+      preload: path.join(__dirname, "../../out/preload/index.js"),
       sandbox: true,
     },
   });
@@ -22,6 +22,21 @@ function createWindow() {
     mainWindow.loadFile(path.join(__dirname, "../renderer/index.html"));
   }
 }
+
+let lastSelectedPath = app.getPath("downloads");
+
+ipcMain.handle("dialog:openDirectory", async () => {
+  const result = await dialog.showOpenDialog({
+    defaultPath: lastSelectedPath,
+    properties: ["openDirectory"],
+  });
+
+  if (!result.canceled && result.filePaths.length > 0) {
+    lastSelectedPath = result.filePaths[0];
+  }
+
+  return result.filePaths;
+});
 
 app.on("ready", () => {
   createWindow();

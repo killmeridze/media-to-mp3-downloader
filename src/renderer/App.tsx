@@ -1,6 +1,15 @@
 import React from "react";
 
 const App: React.FC = () => {
+  const [savePath, setSavePath] = React.useState<string>("");
+
+  const handleDirectorySelect = async () => {
+    const paths = await window.api.openDirectory();
+    if (paths && paths.length > 0) {
+      setSavePath(paths[0]);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient bg-[size:400%_400%] text-white p-8 animate-gradient">
       <div className="max-w-3xl mx-auto space-y-8">
@@ -39,10 +48,14 @@ const App: React.FC = () => {
               <input
                 type="text"
                 readOnly
+                value={savePath}
                 placeholder="Choose save location..."
                 className="flex-1 bg-black/20 border border-white/10 rounded-lg px-4 py-2 cursor-not-allowed"
               />
-              <button className="bg-black/30 hover:bg-black/40 px-4 py-2 rounded-lg font-medium transition-all duration-300 border border-white/10">
+              <button
+                onClick={handleDirectorySelect}
+                className="bg-black/30 hover:bg-black/40 px-4 py-2 rounded-lg font-medium transition-all duration-300 border border-white/10"
+              >
                 Browse
               </button>
             </div>
