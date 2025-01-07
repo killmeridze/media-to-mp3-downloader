@@ -1,49 +1,68 @@
-export enum DownloadStatus {
-  INITIAL = "INITIAL",
-  INVALID_URL = "INVALID_URL",
-  URL_ONLY = "URL_ONLY",
-  READY = "READY",
+interface BaseStatus {
+  message: string;
 }
 
-type StatusMessage = {
-  [key in DownloadStatus]: string;
-};
+interface InitialStatus extends BaseStatus {
+  type: "initial";
+}
 
-const statusMessages: StatusMessage = {
-  [DownloadStatus.INITIAL]: "Ready to download. Paste a URL to begin.",
-  [DownloadStatus.INVALID_URL]:
-    "Please enter a valid YouTube, Instagram, or TikTok URL",
-  [DownloadStatus.URL_ONLY]: "Please select a save location to begin",
-  [DownloadStatus.READY]: "All set! Click Download to start converting",
-};
+interface InvalidUrlStatus extends BaseStatus {
+  type: "invalid_url";
+}
 
-type UseDownloadStatusProps = {
+interface UrlOnlyStatus extends BaseStatus {
+  type: "url_only";
+}
+
+interface ReadyStatus extends BaseStatus {
+  type: "ready";
+}
+
+type DownloadStatus =
+  | InitialStatus
+  | InvalidUrlStatus
+  | UrlOnlyStatus
+  | ReadyStatus;
+
+const STATUS_CONFIG = {
+  initial: "Ready to download. Paste a URL to begin.",
+  invalid_url: "Please enter a valid YouTube, Instagram, or TikTok URL",
+  url_only: "Please select a save location to begin",
+  ready: "All set! Click Download to start converting",
+} as const;
+
+interface UseDownloadStatusProps {
   url: string;
   savePath: string;
   isValidUrl: boolean;
-};
+}
 
-export const useDownloadStatus = ({
+const determineStatus = ({
   url,
   savePath,
   isValidUrl,
-}: UseDownloadStatusProps) => {
-  const getCurrentStatus = (): DownloadStatus => {
-    switch (true) {
-      case Boolean(url && !isValidUrl):
-        return DownloadStatus.INVALID_URL;
-      case Boolean(url && savePath && isValidUrl):
-        return DownloadStatus.READY;
-      case Boolean(url && isValidUrl):
-        return DownloadStatus.URL_ONLY;
-      default:
-        return DownloadStatus.INITIAL;
-    }
-  };
+}: UseDownloadStatusProps): DownloadStatus => {
+  switch (true) {
+    case Boolean(url && !isValidUrl):
+      return { type: "invalid_url", message: STATUS_CONFIG.invalid_url };
+    case Boolean(url && savePath && isValidUrl):
+      return { type: "ready", message: STATUS_CONFIG.ready };
+    case Boolean(url && isValidUrl):
+      return { type: "url_only", message: STATUS_CONFIG.url_only };
+    default:
+      return { type: "initial", message: STATUS_CONFIG.initial };
+  }
+};
+
+export const useDownloadStatus = (props: UseDownloadStatusProps) => {
+  const status = determineStatus(props);
 
   return {
-    status: getCurrentStatus(),
-    message: statusMessages[getCurrentStatus()],
-    isDownloadReady: Boolean(url && savePath && isValidUrl),
-  };
+    status,
+    message: status.message,
+    isDownloadReady: status.type === "ready",
+  } as const;
 };
+
+export const isReadyStatus = (status: DownloadStatus): status is ReadyStatus =>
+  status.type === "ready";

@@ -1,6 +1,6 @@
 {
   "name": "media-to-mp3-downloader",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A desktop application that downloads videos from YouTube, Instagram, and TikTok, converts them to MP3. Users can insert URLs for downloads and choose the directory to save them.",
   "main": "src/main/main.ts",
   "scripts": {

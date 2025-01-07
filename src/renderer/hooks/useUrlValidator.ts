@@ -1,24 +1,40 @@
+import { useMemo } from "react";
+
 export type SupportedPlatform = "youtube" | "instagram" | "tiktok" | null;
 
-const URL_PATTERNS = {
+type URLPatternConfig = {
+  readonly [K in Exclude<SupportedPlatform, null>]: RegExp;
+};
+
+const URL_PATTERNS: URLPatternConfig = {
   youtube: /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/,
   instagram: /^(https?:\/\/)?(www\.)?(instagram\.com|instagr\.am)\/.+$/,
   tiktok: /^(https?:\/\/)?(www\.)?(tiktok\.com)\/.+$/,
-};
+} as const;
 
-export const useUrlValidator = (url: string) => {
-  const validateUrl = (): SupportedPlatform => {
-    if (!url) return null;
+interface ValidatorResult {
+  readonly isValidUrl: boolean;
+  readonly platform: SupportedPlatform;
+}
 
-    const platform = Object.entries(URL_PATTERNS).find(([, pattern]) =>
+export const useUrlValidator = (url: string): ValidatorResult => {
+  const validationResult = useMemo((): ValidatorResult => {
+    if (!url) {
+      return {
+        isValidUrl: false,
+        platform: null,
+      };
+    }
+
+    const [platform] = Object.entries(URL_PATTERNS).find(([, pattern]) =>
       pattern.test(url)
-    );
+    ) ?? [null];
 
-    return platform ? (platform[0] as SupportedPlatform) : null;
-  };
+    return {
+      isValidUrl: Boolean(platform),
+      platform: platform as SupportedPlatform,
+    };
+  }, [url]);
 
-  return {
-    isValidUrl: Boolean(validateUrl()),
-    platform: validateUrl(),
-  };
+  return validationResult;
 };

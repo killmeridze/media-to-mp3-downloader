@@ -1,13 +1,15 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
+const { handleDownloadRequest } = require("./download.ts");
 
 app.disableHardwareAcceleration();
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 800,
-    height: 540,
-    // resizable: false,
+    height: 600,
+    resizable: false,
+    maximizable: false,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -30,26 +32,18 @@ ipcMain.handle("dialog:openDirectory", async () => {
     defaultPath: lastSelectedPath,
     properties: ["openDirectory"],
   });
-
   if (!result.canceled && result.filePaths.length > 0) {
     lastSelectedPath = result.filePaths[0];
   }
-
   return result.filePaths;
 });
 
-app.on("ready", () => {
-  createWindow();
-});
+ipcMain.handle("downloadVideo", handleDownloadRequest);
 
+app.on("ready", createWindow);
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
+  if (process.platform !== "darwin") app.quit();
 });
-
 app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
+  if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
