@@ -17,6 +17,8 @@ export interface DownloadProgress {
   status: "initializing" | "downloading" | "converting" | "complete" | "error";
   progress: number;
   message?: string;
+  showProgress?: boolean;
+  isError?: boolean;
 }
 
 export {};
